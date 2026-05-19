@@ -24,7 +24,7 @@ loca -- Cargar logo desde GitHub
 local LOGO_ID = "rbxassetid://0"
 pcall(function()
     if getcustomasset and writefile then
-        local url = "https://raw.githubusercontent.com/AkiraXleb/scrps/main/logo.png"
+        local url = "https://github.com/AkiraXleb/scrps/blob/main/Logo.png"
         writefile("akiraxleb_logo.png", game:HttpGet(url))
         LOGO_ID = getcustomasset("akiraxleb_logo.png")
     end
