@@ -10,7 +10,7 @@ local THEME = {
     bg       = Color3.fromRGB(8, 8, 10),
     bgPanel  = Color3.fromRGB(15, 15, 18),
     bgLight  = Color3.fromRGB(25, 25, 30),
-    primary  = Color3.fromRGB(255, 20, 40),     -- Rojo neon
+    primary  = Color3.fromRGB(255, 20, 40),
     accent   = Color3.fromRGB(255, 60, 80),
     white    = Color3.fromRGB(255, 255, 255),
     text     = Color3.fromRGB(240, 240, 240),
@@ -19,8 +19,7 @@ local THEME = {
     inactive = Color3.fromRGB(50, 50, 55),
 }
 
--- 🖼️ TU LOGO (cambia el 0 por tu Asset ID cuando lo subas)
--- 🖼️ TU LOGO desde GitHub
+-- 🖼️ LOGO desde GitHub
 local LOGO_ID = "rbxassetid://0"
 pcall(function()
     if getcustomasset and writefile then
@@ -29,6 +28,7 @@ pcall(function()
         LOGO_ID = getcustomasset("akiraxleb_logo.png")
     end
 end)
+
 -- ===== STATE =====
 local weaponKeywords = {
     "launcher","gun","rifle","pistol","shotgun","smg","knife","sword",
@@ -45,7 +45,6 @@ local flying = false
 local flySpeed = 50
 local noclip = false
 
--- Helpers
 local function getChar() return player.Character end
 local function getRoot()
     local c = getChar()
@@ -74,13 +73,11 @@ Main.Active = true
 Main.Draggable = true
 Instance.new("UICorner", Main).CornerRadius = UDim.new(0,10)
 
--- Borde neon
 local MainStroke = Instance.new("UIStroke", Main)
 MainStroke.Color = THEME.primary
 MainStroke.Thickness = 2
 MainStroke.Transparency = 0.2
 
--- Glow exterior (simulado con un frame detrás)
 local Glow = Instance.new("Frame", Main)
 Glow.Size = UDim2.new(1, 8, 1, 8)
 Glow.Position = UDim2.new(0, -4, 0, -4)
@@ -103,7 +100,6 @@ TBFix.Position = UDim2.new(0, 0, 0.5, 0)
 TBFix.BackgroundColor3 = THEME.bgPanel
 TBFix.BorderSizePixel = 0
 
--- Logo
 local Logo = Instance.new("ImageLabel", TitleBar)
 Logo.Size = UDim2.new(0, 28, 0, 28)
 Logo.Position = UDim2.new(0, 8, 0.5, -14)
@@ -111,7 +107,6 @@ Logo.BackgroundTransparency = 1
 Logo.Image = LOGO_ID
 Instance.new("UICorner", Logo).CornerRadius = UDim.new(0,6)
 
--- Fallback "A" rojo cuando no hay logo
 local LogoFallback = Instance.new("TextLabel", TitleBar)
 LogoFallback.Size = UDim2.new(0, 28, 0, 28)
 LogoFallback.Position = UDim2.new(0, 8, 0.5, -14)
@@ -127,7 +122,6 @@ local lfStroke = Instance.new("UIStroke", LogoFallback)
 lfStroke.Color = THEME.primary
 lfStroke.Thickness = 1.5
 
--- Título
 local Title = Instance.new("TextLabel", TitleBar)
 Title.Size = UDim2.new(1, -100, 1, 0)
 Title.Position = UDim2.new(0, 42, 0, 0)
@@ -138,7 +132,6 @@ Title.Font = Enum.Font.GothamBlack
 Title.TextSize = 15
 Title.TextXAlignment = Enum.TextXAlignment.Left
 
--- Min / Close
 local MinBtn = Instance.new("TextButton", TitleBar)
 MinBtn.Size = UDim2.new(0, 26, 0, 26)
 MinBtn.Position = UDim2.new(1, -58, 0.5, -13)
@@ -170,11 +163,9 @@ TabBar.BorderSizePixel = 0
 Instance.new("UICorner", TabBar).CornerRadius = UDim.new(0,6)
 
 local tabs = {}
-local activeTab = nil
 local tabContents = {}
 
 local function setActiveTab(tabName)
-    activeTab = tabName
     for name, btn in pairs(tabs) do
         if name == tabName then
             btn.BackgroundColor3 = THEME.primary
@@ -205,17 +196,15 @@ local function makeTab(name, label, posX, width)
     return btn
 end
 
-makeTab("bring",   "⚡ BRING",  0,    0.333)
-makeTab("move",    "🏃 MOVE",   0.333, 0.333)
-makeTab("misc",    "⚙️ MISC",   0.666, 0.334)
+makeTab("bring", "⚡ BRING", 0,     0.333)
+makeTab("move",  "🏃 MOVE",  0.333, 0.333)
+makeTab("misc",  "⚙️ MISC",  0.666, 0.334)
 
--- ===== CONTENT AREA =====
 local ContentArea = Instance.new("Frame", Main)
 ContentArea.Size = UDim2.new(1, -16, 1, -92)
 ContentArea.Position = UDim2.new(0, 8, 0, 84)
 ContentArea.BackgroundTransparency = 1
 
--- Helper para crear contenido de pestaña
 local function makeTabContent(name)
     local f = Instance.new("Frame", ContentArea)
     f.Name = name
@@ -226,29 +215,21 @@ local function makeTabContent(name)
     return f
 end
 
--- Helper de botón estándar
 local function styledButton(parent, text, size, pos, color)
     local b = Instance.new("TextButton", parent)
-    b.Size = size
-    b.Position = pos
-    b.BackgroundColor3 = color
-    b.Text = text
-    b.TextColor3 = THEME.white
-    b.Font = Enum.Font.GothamBold
-    b.TextSize = 11
-    b.BorderSizePixel = 0
+    b.Size = size; b.Position = pos
+    b.BackgroundColor3 = color; b.Text = text
+    b.TextColor3 = THEME.white; b.Font = Enum.Font.GothamBold
+    b.TextSize = 11; b.BorderSizePixel = 0
     Instance.new("UICorner", b).CornerRadius = UDim.new(0,4)
     return b
 end
 
 local function styledLabel(parent, text, size, pos, color, textSize)
     local l = Instance.new("TextLabel", parent)
-    l.Size = size
-    l.Position = pos
-    l.BackgroundTransparency = 1
-    l.Text = text
-    l.TextColor3 = color or THEME.text
-    l.Font = Enum.Font.Gotham
+    l.Size = size; l.Position = pos
+    l.BackgroundTransparency = 1; l.Text = text
+    l.TextColor3 = color or THEME.text; l.Font = Enum.Font.Gotham
     l.TextSize = textSize or 11
     l.TextXAlignment = Enum.TextXAlignment.Left
     return l
@@ -256,34 +237,21 @@ end
 
 local function styledInput(parent, placeholder, default, size, pos)
     local i = Instance.new("TextBox", parent)
-    i.Size = size
-    i.Position = pos
+    i.Size = size; i.Position = pos
     i.BackgroundColor3 = THEME.bgLight
-    i.PlaceholderText = placeholder
-    i.Text = default or ""
+    i.PlaceholderText = placeholder; i.Text = default or ""
     i.TextColor3 = THEME.white
     i.PlaceholderColor3 = Color3.fromRGB(100, 100, 100)
-    i.Font = Enum.Font.Gotham
-    i.TextSize = 12
-    i.ClearTextOnFocus = false
-    i.BorderSizePixel = 0
+    i.Font = Enum.Font.Gotham; i.TextSize = 12
+    i.ClearTextOnFocus = false; i.BorderSizePixel = 0
     Instance.new("UICorner", i).CornerRadius = UDim.new(0,4)
-    local s = Instance.new("UIStroke", i)
-    s.Color = THEME.primary
-    s.Thickness = 1
-    s.Transparency = 0.5
     return i
 end
 
--- =====================
--- TAB 1: BRING
--- =====================
+-- ===== TAB 1: BRING =====
 local bringTab = makeTabContent("bring")
-
 local Status = styledLabel(bringTab, "⏳ Detectando...", UDim2.new(1,0,0,16), UDim2.new(0,0,0,0), THEME.textDim, 10)
-
 local SearchBox = styledInput(bringTab, "🔍 Filtrar...", "", UDim2.new(1,0,0,24), UDim2.new(0,0,0,20))
-
 local SelectAllBtn = styledButton(bringTab, "✓ Todas", UDim2.new(0.48,-3,0,22), UDim2.new(0,0,0,50), Color3.fromRGB(40,100,40))
 local DeselectBtn  = styledButton(bringTab, "✗ Ninguna", UDim2.new(0.48,-3,0,22), UDim2.new(0.52,3,0,50), Color3.fromRGB(100,40,40))
 
@@ -302,18 +270,15 @@ local Padd = Instance.new("UIPadding", Scroll)
 Padd.PaddingTop = UDim.new(0, 3)
 Padd.PaddingLeft = UDim.new(0, 3)
 
-local ScanBtn   = styledButton(bringTab, "🔍 Re-detectar",   UDim2.new(1,0,0,22), UDim2.new(0,0,0,266), Color3.fromRGB(80,60,140))
-local BringBtn  = styledButton(bringTab, "⚡ TRAER AHORA",    UDim2.new(1,0,0,22), UDim2.new(0,0,0,292), THEME.primary)
-local StickyBtn = styledButton(bringTab, "🧲 Sticky: OFF",   UDim2.new(0.48,-3,0,22), UDim2.new(0,0,0,318), THEME.inactive)
-local AutoBtn   = styledButton(bringTab, "🔄 Auto: OFF",     UDim2.new(0.48,-3,0,22), UDim2.new(0.52,3,0,318), THEME.inactive)
+local ScanBtn   = styledButton(bringTab, "🔍 Re-detectar", UDim2.new(1,0,0,22), UDim2.new(0,0,0,266), Color3.fromRGB(80,60,140))
+local BringBtn  = styledButton(bringTab, "⚡ TRAER AHORA", UDim2.new(1,0,0,22), UDim2.new(0,0,0,292), THEME.primary)
+local StickyBtn = styledButton(bringTab, "🧲 Sticky: OFF", UDim2.new(0.48,-3,0,22), UDim2.new(0,0,0,318), THEME.inactive)
+local AutoBtn   = styledButton(bringTab, "🔄 Auto: OFF", UDim2.new(0.48,-3,0,22), UDim2.new(0.52,3,0,318), THEME.inactive)
 
--- =====================
--- TAB 2: MOVIMIENTO
--- =====================
+-- ===== TAB 2: MOVE =====
 local moveTab = makeTabContent("move")
-
 styledLabel(moveTab, "🏃 VELOCIDAD", UDim2.new(1,0,0,18), UDim2.new(0,0,0,0), THEME.accent, 12)
-styledLabel(moveTab, "Velocidad de caminar:", UDim2.new(1,0,0,14), UDim2.new(0,0,0,22), THEME.textDim, 10)
+styledLabel(moveTab, "Velocidad caminar:", UDim2.new(1,0,0,14), UDim2.new(0,0,0,22), THEME.textDim, 10)
 local SpeedInput = styledInput(moveTab, "16", "16", UDim2.new(0.7,-3,0,24), UDim2.new(0,0,0,38))
 local SetSpeedBtn = styledButton(moveTab, "Set", UDim2.new(0.3,0,0,24), UDim2.new(0.7,3,0,38), THEME.primary)
 
@@ -321,34 +286,22 @@ styledLabel(moveTab, "Altura de salto:", UDim2.new(1,0,0,14), UDim2.new(0,0,0,70
 local JumpInput = styledInput(moveTab, "50", "50", UDim2.new(0.7,-3,0,24), UDim2.new(0,0,0,86))
 local SetJumpBtn = styledButton(moveTab, "Set", UDim2.new(0.3,0,0,24), UDim2.new(0.7,3,0,86), THEME.primary)
 
--- Vuelo
 styledLabel(moveTab, "✈️ VUELO", UDim2.new(1,0,0,18), UDim2.new(0,0,0,124), THEME.accent, 12)
-styledLabel(moveTab, "Velocidad de vuelo:", UDim2.new(1,0,0,14), UDim2.new(0,0,0,146), THEME.textDim, 10)
+styledLabel(moveTab, "Velocidad vuelo:", UDim2.new(1,0,0,14), UDim2.new(0,0,0,146), THEME.textDim, 10)
 local FlySpeedInput = styledInput(moveTab, "50", "50", UDim2.new(1,0,0,24), UDim2.new(0,0,0,162))
-
 local FlyBtn = styledButton(moveTab, "✈️ VOLAR: OFF", UDim2.new(1,0,0,28), UDim2.new(0,0,0,194), THEME.inactive)
+styledLabel(moveTab, "WASD=mover | Esp=subir | Shift=bajar", UDim2.new(1,0,0,28), UDim2.new(0,0,0,228), THEME.textDim, 9)
+local ResetMoveBtn = styledButton(moveTab, "🔄 Reset", UDim2.new(1,0,0,24), UDim2.new(0,0,0,300), Color3.fromRGB(80,80,80))
 
-styledLabel(moveTab, "WASD = mover | Espacio = subir | Shift = bajar",
-    UDim2.new(1,0,0,28), UDim2.new(0,0,0,228), THEME.textDim, 9)
-
--- Reset
-local ResetMoveBtn = styledButton(moveTab, "🔄 Reset valores", UDim2.new(1,0,0,24), UDim2.new(0,0,0,300), Color3.fromRGB(80,80,80))
-
--- =====================
--- TAB 3: MISC
--- =====================
+-- ===== TAB 3: MISC =====
 local miscTab = makeTabContent("misc")
-
 styledLabel(miscTab, "⚙️ EXTRAS", UDim2.new(1,0,0,18), UDim2.new(0,0,0,0), THEME.accent, 12)
-
 local NoclipBtn = styledButton(miscTab, "🚪 Noclip: OFF", UDim2.new(1,0,0,28), UDim2.new(0,0,0,24), THEME.inactive)
 local InfFuelBtn = styledButton(miscTab, "🔋 Inf. Fuel: OFF", UDim2.new(1,0,0,28), UDim2.new(0,0,0,58), THEME.inactive)
 local InfHungerBtn = styledButton(miscTab, "🍔 Inf. Hambre: OFF", UDim2.new(1,0,0,28), UDim2.new(0,0,0,92), THEME.inactive)
-
-styledLabel(miscTab, "─────────────────", UDim2.new(1,0,0,14), UDim2.new(0,0,0,140), THEME.textDim, 10)
 styledLabel(miscTab, "👤 AKIRAXLEB", UDim2.new(1,0,0,16), UDim2.new(0,0,0,160), THEME.accent, 13)
-styledLabel(miscTab, "Hub creado para A Dusty Trip", UDim2.new(1,0,0,14), UDim2.new(0,0,0,180), THEME.textDim, 10)
-styledLabel(miscTab, "Versión 3.0 | by AkiraXleb", UDim2.new(1,0,0,14), UDim2.new(0,0,0,196), THEME.textDim, 10)
+styledLabel(miscTab, "Hub para A Dusty Trip", UDim2.new(1,0,0,14), UDim2.new(0,0,0,180), THEME.textDim, 10)
+styledLabel(miscTab, "v3.0 | by AkiraXleb", UDim2.new(1,0,0,14), UDim2.new(0,0,0,196), THEME.textDim, 10)
 
 -- ===== MINI ICON =====
 local MiniIcon = Instance.new("TextButton", ScreenGui)
@@ -368,11 +321,7 @@ local miStroke = Instance.new("UIStroke", MiniIcon)
 miStroke.Color = THEME.primary
 miStroke.Thickness = 2
 
--- =====================
---       LÓGICA
--- =====================
-
--- ===== BRING LOGIC =====
+-- ===== LÓGICA =====
 local function isWeapon(name)
     local lower = name:lower()
     for _, kw in ipairs(weaponKeywords) do
@@ -427,13 +376,8 @@ local function buildList()
             local pp = Instance.new("UIPadding", btn) pp.PaddingLeft = UDim.new(0,6)
             btn.MouseButton1Click:Connect(function()
                 selected[d.name] = not selected[d.name]
-                if selected[d.name] then
-                    btn.Text = "✓ " .. d.name
-                    btn.BackgroundColor3 = Color3.fromRGB(50,90,50)
-                else
-                    btn.Text = "  " .. d.name
-                    btn.BackgroundColor3 = THEME.bgLight
-                end
+                btn.Text = (selected[d.name] and "✓ " or "  ") .. d.name
+                btn.BackgroundColor3 = selected[d.name] and Color3.fromRGB(50,90,50) or THEME.bgLight
             end)
         end
     end
@@ -468,12 +412,6 @@ local function teleportItem(item, cf)
             pp.AssemblyAngularVelocity = Vector3.zero
         end
         if item:IsA("Model") then item:PivotTo(cf) else item.CFrame = cf end
-        task.delay(0.05, function()
-            if pp and pp.Parent then
-                pp.AssemblyLinearVelocity = Vector3.zero
-                pp.AssemblyAngularVelocity = Vector3.zero
-            end
-        end)
     end)
 end
 
@@ -494,7 +432,7 @@ local function bringSelected()
     return total
 end
 
--- ===== MOVE LOGIC =====
+-- Move
 SetSpeedBtn.MouseButton1Click:Connect(function()
     local v = tonumber(SpeedInput.Text)
     local h = getHum()
@@ -503,49 +441,38 @@ end)
 SetJumpBtn.MouseButton1Click:Connect(function()
     local v = tonumber(JumpInput.Text)
     local h = getHum()
-    if v and h then h.JumpPower = v h.UseJumpPower = true end
+    if v and h then h.JumpPower = v; h.UseJumpPower = true end
 end)
 ResetMoveBtn.MouseButton1Click:Connect(function()
     local h = getHum()
-    if h then
-        h.WalkSpeed = 16
-        h.JumpPower = 50
-    end
-    SpeedInput.Text = "16"
-    JumpInput.Text = "50"
+    if h then h.WalkSpeed = 16; h.JumpPower = 50 end
+    SpeedInput.Text = "16"; JumpInput.Text = "50"
 end)
 
--- ===== FLY =====
+-- Fly
 local bv, bg
 local function startFly()
-    local root = getRoot()
-    local h = getHum()
+    local root = getRoot(); local h = getHum()
     if not root or not h then return end
     h.PlatformStand = true
     bg = Instance.new("BodyGyro", root)
-    bg.MaxTorque = Vector3.new(9e9,9e9,9e9)
-    bg.P = 9e9
+    bg.MaxTorque = Vector3.new(9e9,9e9,9e9); bg.P = 9e9
     bv = Instance.new("BodyVelocity", root)
-    bv.MaxForce = Vector3.new(9e9,9e9,9e9)
-    bv.Velocity = Vector3.zero
+    bv.MaxForce = Vector3.new(9e9,9e9,9e9); bv.Velocity = Vector3.zero
 end
 local function stopFly()
     local h = getHum()
     if h then h.PlatformStand = false end
-    if bv then bv:Destroy() bv = nil end
-    if bg then bg:Destroy() bg = nil end
+    if bv then bv:Destroy(); bv = nil end
+    if bg then bg:Destroy(); bg = nil end
 end
 
 FlyBtn.MouseButton1Click:Connect(function()
     flying = not flying
     if flying then
-        startFly()
-        FlyBtn.Text = "✈️ VOLAR: ON"
-        FlyBtn.BackgroundColor3 = THEME.success
+        startFly(); FlyBtn.Text = "✈️ VOLAR: ON"; FlyBtn.BackgroundColor3 = THEME.success
     else
-        stopFly()
-        FlyBtn.Text = "✈️ VOLAR: OFF"
-        FlyBtn.BackgroundColor3 = THEME.inactive
+        stopFly(); FlyBtn.Text = "✈️ VOLAR: OFF"; FlyBtn.BackgroundColor3 = THEME.inactive
     end
 end)
 
@@ -563,4 +490,37 @@ RunService.RenderStepped:Connect(function()
         if UserInputService:IsKeyDown(Enum.KeyCode.S) then move = move - cam.CFrame.LookVector end
         if UserInputService:IsKeyDown(Enum.KeyCode.A) then move = move - cam.CFrame.RightVector end
         if UserInputService:IsKeyDown(Enum.KeyCode.D) then move = move + cam.CFrame.RightVector end
-        if
+        if UserInputService:IsKeyDown(Enum.KeyCode.Space) then move = move + Vector3.new(0,1,0) end
+        if UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) then move = move - Vector3.new(0,1,0) end
+        bv.Velocity = move * flySpeed
+    end
+end)
+
+player.CharacterAdded:Connect(function()
+    if flying then task.wait(1); startFly() end
+end)
+
+-- Misc
+NoclipBtn.MouseButton1Click:Connect(function()
+    noclip = not noclip
+    NoclipBtn.Text = "🚪 Noclip: " .. (noclip and "ON" or "OFF")
+    NoclipBtn.BackgroundColor3 = noclip and THEME.success or THEME.inactive
+end)
+
+RunService.Stepped:Connect(function()
+    if noclip then
+        local c = getChar()
+        if c then
+            for _, p in ipairs(c:GetDescendants()) do
+                if p:IsA("BasePart") then p.CanCollide = false end
+            end
+        end
+    end
+end)
+
+local infFuel = false
+local infHunger = false
+InfFuelBtn.MouseButton1Click:Connect(function()
+    infFuel = not infFuel
+    InfFuelBtn.Text = "🔋 Inf. Fuel: " .. (infFuel and "ON" or "OFF")
+    InfFu
